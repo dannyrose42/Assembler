@@ -10,31 +10,28 @@
 #include "Parser.h"
 
 int main(int argc, char** argv) {
-    string inputFile = "add.asm";
+    string inputFile = "add_nc.asm";
     char selection;
-    string dest, comp, jump, machineComp, machineDest, command;
+    string dest, comp, jump, machineComp, machineDest, machineJump, command;
     bool quit = false;
 //    cout << "Enter Assembly File Name:" << endl;
 //    getline(cin, inputFile);
     Coder Coder;
-    Parser Parser(inputFile);   
-    cout << "command:" << Parser.getCurrentCommand() << endl;
-    switch(Parser.commandType()){
-        case C_COMMAND:
+    Parser Parser(inputFile);
+    while(!quit){
+        cout << "Enter selection:" << endl;
+        cout << "a: Advance" << endl;
+        cout << "q: Quit" << endl;
+        
+        cin >> selection;
+        
+        if (selection == 'a'){
             
-            comp = Parser.comp();
-            machineComp = Coder.comp(comp);
-            cout << "comp: " << comp << " - " << machineComp << endl;
-            
-            dest = Parser.dest();
-            machineDest = Coder.dest(dest);
-            cout << "dest: " << dest << " - " << machineDest << endl;
-            
-            
-            break;
-        case A_COMMAND:
-            cout << "symbol: " << Parser.symbol() << endl;
+        }
+        else if(selection == 'q')quit=true;
+        
     }
+
 }
 
 

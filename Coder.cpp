@@ -126,7 +126,7 @@ string Coder::comp(string compMnemonic){
     else if (compMnemonic.compare("D|M")==0)
         return "1010101";
     else
-        return "eeeeeee";
+        return compMnemonic;
 }   
 /*==========================================================================
 *IN: HACK assembly Jump mnemonic
@@ -159,4 +159,5 @@ string Coder::jump(string jumpMnemonic){
         return "110";
     else if (jumpMnemonic.compare("JMP")==0)
         return "111";
+    else return jumpMnemonic;
 }

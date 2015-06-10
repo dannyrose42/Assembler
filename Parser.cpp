@@ -5,7 +5,7 @@ Parser::Parser(string input_file){
     if(fin.fail()){
         cout << "Invalid file name." << endl;
     }
-    advance(); // "Advance" to the first command of the file
+    //advance(); // "Advance" to the first command of the file
 }
 string Parser::getCurrentCommand(){
     return current_command;
@@ -74,7 +74,7 @@ string Parser::dest(){
     while(current_command[i]!= '=' && i < current_command.size()){
         i++;
     }
-    return current_command.substr(0, i-1);    
+    return current_command.substr(0, i);    
 }
 string Parser::comp(){
     if(commandType() != C_COMMAND){
@@ -85,15 +85,17 @@ string Parser::comp(){
     while(current_command[i]!= '=' && i < current_command.size()){
         i++;
     }
+    if(current_command[i] == '=')i++;
+
     int j = 0;
     while(current_command[j]!=';' && j < current_command.size()){
         j++;
     }
     
-    if (i > current_command.size())
-        return current_command.substr(0, j-1);// no '=' found form "comp;jump
-    else
-        return current_command.substr(i, j-1);//'=' found form "dest=comp;jump"    
+    if (i >= current_command.size())
+        return current_command.substr(0, j);// no '=' found form "comp;jump
+    else             
+        return current_command.substr(i, j-2);//'=' found form "dest=comp;jump"    
 }                                             //            or "dest=comp"
 string Parser::jump(){
     if(commandType() != C_COMMAND){
@@ -104,6 +106,7 @@ string Parser::jump(){
     while(current_command[i]!= ';' && i < current_command.size()){
         i++;
     }
+    if(current_command[i] == ';')i++;
     return current_command.substr(i, current_command.size()-1);  
     
 }

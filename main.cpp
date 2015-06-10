@@ -16,18 +16,18 @@ int main(int argc, char** argv) {
     bool quit = false;
 //    cout << "Enter Assembly File Name:" << endl;
 //    getline(cin, inputFile);
-    Coder Coder();
+    Coder Coder;
     Parser Parser(inputFile);   
     cout << "command:" << Parser.getCurrentCommand() << endl;
     switch(Parser.commandType()){
         case C_COMMAND:
             
             comp = Parser.comp();
-            machineComp = Coder->comp(comp);
+            machineComp = Coder.comp(comp);
             cout << "comp: " << comp << " - " << machineComp << endl;
             
             dest = Parser.dest();
-            machineDest = Coder->dest(dest);
+            machineDest = Coder.dest(dest);
             cout << "dest: " << dest << " - " << machineDest << endl;
             
             

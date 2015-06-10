@@ -1,4 +1,7 @@
 #include "Coder.h"
+Coder::Coder(){
+   assembly_instruction = "";  
+}
 /*==========================================================================
 *IN: HACK assembly destination mnemonic
 *OUT: 3 bit HACK machine code corresponding to IN mnemonic

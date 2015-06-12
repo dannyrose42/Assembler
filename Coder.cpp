@@ -1,6 +1,5 @@
 #include "Coder.h"
 Coder::Coder(){
-   assembly_instruction = "";  
 }
 /*==========================================================================
 *IN: HACK assembly destination mnemonic
@@ -34,7 +33,7 @@ string Coder::dest(string destMnemonic){
     else if (destMnemonic.compare("AMD")==0)
         return "111";
     else 
-        return "eee";
+        return "000";
 }
 /*==========================================================================
 *IN: HACK assembly comp mnemonic
@@ -159,5 +158,20 @@ string Coder::jump(string jumpMnemonic){
         return "110";
     else if (jumpMnemonic.compare("JMP")==0)
         return "111";
-    else return jumpMnemonic;
+    else return "000";
+}
+
+string Coder::dec(string decimal){
+
+    int value = atoi(decimal.c_str());
+    
+    string bin16  = "0000000000000000";
+    for (int pos = 15; pos >= 0; --pos)
+    {;
+        if (value % 2) 
+            bin16[pos] = '1';
+        value /= 2;
+    }
+
+    return bin16; 
 }

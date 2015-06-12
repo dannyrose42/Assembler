@@ -14,8 +14,6 @@ public:
     string dest(string destMnemonic);
     string comp(string compMnemonic);
     string jump(string jumpMnemonic);
-protected:
-    string assembly_instruction;
-    
+    string dec(string decimal);
 };      
 #endif	/* CODER_H */

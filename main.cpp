@@ -12,8 +12,6 @@
 
 int main(int argc, char** argv) {
     string inputFile, outputFile = "";
-    char selection;
-    bool quit = false;
     int labelAddr, variableAddr;
     ofstream output;
     string dest, 

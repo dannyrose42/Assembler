@@ -42,4 +42,3 @@ int SymbolTable::getAddress(string symbol){
         cout << "Error: getAddress called on invalid key" << endl;
         return -1; 
 }
-

@@ -36,4 +36,3 @@ protected:
     string current_command;
 };
 #endif	/* PARSER_H */
-

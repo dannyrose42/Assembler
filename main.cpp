@@ -39,9 +39,6 @@ int main(int argc, char** argv) {
     labelAddr = 0;
     while(Parser.hasMoreCommands()){
         Parser.advance();
-//        cout << "CommandType:" << Parser.getCurrentCommand() << endl;
-//        cout << "Command:" << Parser.getCurrentCommand() << endl;
-//        cout << "LabeAddr:" << labelAddr << endl << endl;
         switch(Parser.commandType()){
             case A_COMMAND:
                 labelAddr++;
@@ -51,11 +48,10 @@ int main(int argc, char** argv) {
                 break;
             case L_COMMAND:
                 SymbolTable.addEntry(Parser.symbol(), labelAddr);
-//                cout << "adding symbol table:" << Parser.symbol() << endl; 
                 break; 
         }     
     }
-    //reset fstream to begining of file for next pass
+    //reset fstream to beginning of file for next pass
     Parser.reset(); 
 
     //Second Pass: Adds program's variables to symbol table and completes translation    
@@ -73,7 +69,7 @@ int main(int argc, char** argv) {
                     machineJump = Coder.jump(Parser.jump());
                     // Write C_command machine code word to output
                     output << "111" << machineComp << machineDest << machineJump << endl;
-                  break;
+                    break;
                 case A_COMMAND:;
                     //Determines if @ instruction is decimal or label:
                     if(Parser.symbol().find_first_not_of("0123456789") == string::npos){
@@ -92,7 +88,8 @@ int main(int argc, char** argv) {
                             variableAddr++;
                             output << Coder.dec(SymbolTable.getAddress(Parser.symbol())) << endl;
                         }
-                    }                
+                    }
+                    break;
             }      
         }  
     }

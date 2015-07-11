@@ -13,11 +13,15 @@ string Parser::getCurrentCommand(){
 }
 //Are there more commands in the input?
 bool Parser::hasMoreCommands(){
-    return !fin.eof();      
+    return !fin.eof();
+}
+//Return valid command?
+bool Parser::validCommand(){
+    return valid_command;
 }
 // Finds the next line that does not begin with "//" and sets as current_command
 void Parser::advance(){
-    bool valid_command = false;
+    valid_command = false;
     string current_line;
     while(!valid_command && hasMoreCommands()){
         semicolon = equalSign = firstBlank = 0;
@@ -38,20 +42,18 @@ void Parser::advance(){
     }
     if(valid_command){
         current_command = current_line;
-            
+        // Determine index of the semicolon, equal sign, and first blank space after command  
         while(current_command[equalSign]!= '=' && equalSign < current_command.size())
-            equalSign++;
-        
+            equalSign++;      
         while(current_command[semicolon]!=';' && semicolon < current_command.size())
-            semicolon++;
-         
-//      firstBlank = current_command.find_first_of("\t\r\n");
+            semicolon++;        
         while(current_command[firstBlank] != ' ' && firstBlank < current_command.size())
             firstBlank++;
-
+        
         if(firstBlank != string::npos)
         current_command.erase(firstBlank, string::npos);
-    }     
+    }
+    
 }
 //Reset fin to begining of file 
 void Parser::reset(){
@@ -90,15 +92,14 @@ string Parser::symbol(){
     
     else cout << "symbol() called on C_COMMAND" << endl;     
 }
-/*returns the dest mnemonic in the current C_COMMAND (8 possibilities). Should
- * be called only when commandType() is C_COMMAND>
- */
+//returns the dest mnemonic in the current C_COMMAND 
 string Parser::dest(){
     if(commandType() != C_COMMAND){
         cout << "dest() called on non-C_COMMAND " << endl;
     }
     return current_command.substr(0, equalSign);    
 }
+//returns the comp mnemonic in the current C_COMMAND 
 string Parser::comp(){
     if(commandType() != C_COMMAND){
         cout << "comp() called on non-C_COMMAND " << endl;
@@ -110,7 +111,8 @@ string Parser::comp(){
         return current_command.substr(equalSign+1, firstBlank-1);//no ';'found form "dest=comp"    
     else                                                     
         return current_command.substr(equalSign+1, semicolon-1); // form dest=comp;jump
-}                                        
+}
+//returns the jump mnemonic in the current C_COMMAND 
 string Parser::jump(){
     if(commandType() != C_COMMAND)
         cout << "jump() called on non-C_COMMAND " << endl;

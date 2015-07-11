@@ -39,9 +39,9 @@ int main(int argc, char** argv) {
     labelAddr = 0;
     while(Parser.hasMoreCommands()){
         Parser.advance();
-        cout << "CommandType:" << Parser.getCurrentCommand() << endl;
-        cout << "Command:" << Parser.getCurrentCommand() << endl;
-        cout << "LabeAddr:" << labelAddr << endl << endl;
+//        cout << "CommandType:" << Parser.getCurrentCommand() << endl;
+//        cout << "Command:" << Parser.getCurrentCommand() << endl;
+//        cout << "LabeAddr:" << labelAddr << endl << endl;
         switch(Parser.commandType()){
             case A_COMMAND:
                 labelAddr++;
@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
                 break;
             case L_COMMAND:
                 SymbolTable.addEntry(Parser.symbol(), labelAddr);
-                cout << "adding symbol table:" << Parser.symbol() << endl; 
+//                cout << "adding symbol table:" << Parser.symbol() << endl; 
                 break; 
         }     
     }
@@ -64,51 +64,37 @@ int main(int argc, char** argv) {
     if (output.fail()) cout << "Failed to initialize output" << endl;
     while(Parser.hasMoreCommands()){
         Parser.advance();
-        
-//        cout << "commandType:" << Parser.commandType() << endl;
-//        cout << "command:" << Parser.getCurrentCommand() << '.' << endl;
-//        cout << "size:" << Parser.getCurrentCommand().size() << endl;
-//        cout << "semicolon:" << Parser.semicolon << endl;
-//        cout << "equalSign:" << Parser.equalSign << endl;
-//        cout << "firstBlank:" << Parser.firstBlank << endl; 
-
-        switch (Parser.commandType()){
-            case C_COMMAND:
-                machineComp = Coder.comp(Parser.comp());
-                machineDest = Coder.dest(Parser.dest());
-                machineJump = Coder.jump(Parser.jump());                 
-                output << "111" << machineComp << machineDest << machineJump << endl;
-                
-//                cout << "comp:" << Parser.comp() << "." << endl;
-//                cout << "dest:" << Parser.dest() << "." << endl;
-//                cout << "jump:" << Parser.jump() << "." << endl;
-//                cout << "MachineJump:" << machineJump << endl;
-//                cout << "MachineDest:" << machineDest << endl;
-//                cout << "MachineComp:" << machineComp << endl << endl;
-                 
-                break;
-            case A_COMMAND:
-                cout << "symbol:" << Parser.symbol() << "." << endl;
-                //Determines if @ instruction is decimal or label:
-                if(Parser.symbol().find_first_not_of("0123456789") == string::npos){
-                //Xxx is a decimal number
-                    cout << "Symbol is decimal:" << Coder.dec(Parser.symbol()) << endl << endl;
-                    output << Parser.symbol() << endl;}
-                else{//Xxx is variable or label
-                     // Look for symbol in symbol table
-                    if(SymbolTable.contains((Parser.symbol()))){
-                        cout << "In Table:" << Parser.symbol() << endl << endl;
-                        output << Coder.dec(SymbolTable.getAddress(Parser.symbol())) << endl;
-                    }
-                    //Symbol not found in SymbolTable: Must be new variable, add to symbol table
-                    else{
-                        cout << "Adding variable to table:" << Parser.symbol() << "addr:" << variableAddr<< endl << endl;
-                        SymbolTable.addEntry(Parser.symbol(), variableAddr);
-                        variableAddr++;
-                        output << Coder.dec(SymbolTable.getAddress(Parser.symbol())) << endl;
-                    }
-                }                
-        }      
+        if(Parser.validCommand()){
+            switch (Parser.commandType()){
+                case C_COMMAND:
+                    //Build C_COMMAND machine code word
+                    machineComp = Coder.comp(Parser.comp());
+                    machineDest = Coder.dest(Parser.dest());
+                    machineJump = Coder.jump(Parser.jump());
+                    // Write C_command machine code word to output
+                    output << "111" << machineComp << machineDest << machineJump << endl;
+                  break;
+                case A_COMMAND:;
+                    //Determines if @ instruction is decimal or label:
+                    if(Parser.symbol().find_first_not_of("0123456789") == string::npos){
+                    //Xxx is a decimal number
+                        output << Coder.dec(Parser.symbol()) << endl;}
+                    else{//Xxx is variable or label
+                         // Look for symbol in symbol table
+                        if(SymbolTable.contains((Parser.symbol()))){
+                            //Found in Symbol Table, build machine code word and write to output
+                            output << Coder.dec(SymbolTable.getAddress(Parser.symbol())) << endl;
+                        }
+                        //Symbol not found in SymbolTable: Must be new variable, add to symbol table,
+                        //build machine code word and write to output 
+                        else{
+                            SymbolTable.addEntry(Parser.symbol(), variableAddr);
+                            variableAddr++;
+                            output << Coder.dec(SymbolTable.getAddress(Parser.symbol())) << endl;
+                        }
+                    }                
+            }      
+        }  
     }
     output.close();
 }

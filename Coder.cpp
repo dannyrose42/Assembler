@@ -162,9 +162,9 @@ string Coder::jump(string jumpMnemonic){
         return "111";
     else return "000";
 }
-
+//Accepts a string containing a decimal number and 
+//Returns string containing equivalent 16 bit binary number  
 string Coder::dec(string decimal){
-
     int value = atoi(decimal.c_str());
     
     string bin16  = "0000000000000000";
@@ -174,12 +174,10 @@ string Coder::dec(string decimal){
             bin16[pos] = '1';
         value /= 2;
     }
-
     return bin16; 
 }
-//dec overloaded for int from SymbolTable
+//Above dec() function overloaded for int  from SymbolTable
 string Coder::dec(int decimal){
-
     int value = decimal; 
     
     string bin16  = "0000000000000000";
@@ -189,6 +187,5 @@ string Coder::dec(int decimal){
             bin16[pos] = '1';
         value /= 2;
     }
-
     return bin16; 
 }

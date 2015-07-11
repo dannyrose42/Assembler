@@ -16,6 +16,7 @@ public:
     Parser(string input_file);
     string getCurrentCommand();
     bool hasMoreCommands();
+    bool validCommand();
     void advance();
     void reset();
     COMMAND_TYPE commandType();
@@ -29,6 +30,7 @@ public:
 
 
 protected:
+    bool valid_command;
     fstream fin;
     string input_file; 
     string current_command;

@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/Coder.o \
 	${OBJECTDIR}/Parser.o \
+	${OBJECTDIR}/SymbolTable.o \
 	${OBJECTDIR}/main.o
 
 
@@ -67,17 +68,22 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/hack_assembler.exe: ${OBJECTFILES}
 ${OBJECTDIR}/Coder.o: Coder.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../../../../../MinGW -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Coder.o Coder.cpp
+	$(COMPILE.cc) -g -I../../../../../../MinGW -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Coder.o Coder.cpp
 
 ${OBJECTDIR}/Parser.o: Parser.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../../../../../MinGW -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Parser.o Parser.cpp
+	$(COMPILE.cc) -g -I../../../../../../MinGW -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Parser.o Parser.cpp
+
+${OBJECTDIR}/SymbolTable.o: SymbolTable.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I../../../../../../MinGW -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SymbolTable.o SymbolTable.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../../../../../MinGW -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -I../../../../../../MinGW -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

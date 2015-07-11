@@ -1,6 +1,7 @@
 #include "Parser.h"
 //Constructor opens the input file/stream and gets ready to parse it
-Parser::Parser(string input_file){
+Parser::Parser(string file){
+    input_file = file;
     fin.open(input_file.c_str());
     if(fin.fail()){
         cout << "Invalid file name." << endl;
@@ -19,18 +20,43 @@ void Parser::advance(){
     bool valid_command = false;
     string current_line;
     while(!valid_command && hasMoreCommands()){
+        semicolon = equalSign = firstBlank = 0;
         getline(fin, current_line);
         //remove leading blanks
         current_line.erase(0, current_line.find_first_not_of(" \t\r\n"));
-        if(current_line.substr(0, 2).compare("//") != 0){
-          valid_command = true;  
+        //Remove trailing  Comment
+        for(int i = 0; i < current_line.size(); i++){
+            if(current_line.substr(i, 2).compare("//") == 0){
+              current_line.erase(i, string::npos);
+            }
         }
+        //Remove trailing blanks if there are any
+        if (current_line.find_first_of(" \t\r\n")!= string::npos)
+            current_line.erase(current_line.find_first_of(" \t\r\n"), string::npos);
+        
+        if(!current_line.empty())valid_command = true;
     }
     if(valid_command){
         current_command = current_line;
-        return;
-    }
-    else cout << "Could not advance: reached end of file" << endl;    
+            
+        while(current_command[equalSign]!= '=' && equalSign < current_command.size())
+            equalSign++;
+        
+        while(current_command[semicolon]!=';' && semicolon < current_command.size())
+            semicolon++;
+         
+//      firstBlank = current_command.find_first_of("\t\r\n");
+        while(current_command[firstBlank] != ' ' && firstBlank < current_command.size())
+            firstBlank++;
+
+        if(firstBlank != string::npos)
+        current_command.erase(firstBlank, string::npos);
+    }     
+}
+//Reset fin to begining of file 
+void Parser::reset(){
+    fin.clear();
+    fin.seekg(0, ios::beg);
 }
 /* Returns the type of the current command.
  * A_COMMAND: for @Xxx where Xxx is either a symbol or a decimal number
@@ -40,7 +66,7 @@ void Parser::advance(){
  * C_COMMAND: for dest=comp;jump
  */
 COMMAND_TYPE Parser::commandType(){
-   switch (current_command[0]){
+    switch (current_command[0]){
         case '@':
             return A_COMMAND;
             break;
@@ -50,17 +76,19 @@ COMMAND_TYPE Parser::commandType(){
         default:
             return C_COMMAND;
             break;               
-
    }
 }
 /*Returns the symbol or decimal Xxx of the current command @Xxx or (Xxx). 
  * Should be called only when type is A_COMMAND or L_COMMAND.
  */
 string Parser::symbol(){
-    if(commandType() == C_COMMAND){
-        cout << "symbol() called on C_COMMAND" << endl;
-    }
-    return current_command.substr(1,3);
+    
+    if(commandType() == A_COMMAND)
+        return current_command.substr(1, firstBlank-1); 
+    else if (commandType() == L_COMMAND)
+        return current_command.substr(1, firstBlank-2);
+    
+    else cout << "symbol() called on C_COMMAND" << endl;     
 }
 /*returns the dest mnemonic in the current C_COMMAND (8 possibilities). Should
  * be called only when commandType() is C_COMMAND>
@@ -69,44 +97,25 @@ string Parser::dest(){
     if(commandType() != C_COMMAND){
         cout << "dest() called on non-C_COMMAND " << endl;
     }
-    int i = 0;
-    
-    while(current_command[i]!= '=' && i < current_command.size()){
-        i++;
-    }
-    return current_command.substr(0, i);    
+    return current_command.substr(0, equalSign);    
 }
 string Parser::comp(){
     if(commandType() != C_COMMAND){
         cout << "comp() called on non-C_COMMAND " << endl;
     }
-    int i = 0;
-    
-    while(current_command[i]!= '=' && i < current_command.size()){
-        i++;
-    }
-    if(current_command[i] == '=')i++;
-
-    int j = 0;
-    while(current_command[j]!=';' && j < current_command.size()){
-        j++;
-    }
-    
-    if (i >= current_command.size())
-        return current_command.substr(0, j);// no '=' found form "comp;jump
-    else             
-        return current_command.substr(i, j-2);//'=' found form "dest=comp;jump"    
-}                                             //            or "dest=comp"
+     
+    if (equalSign >= current_command.size())
+        return current_command.substr(0, semicolon);// no '=' found form "comp;jump"
+    else if (semicolon >= current_command.size())            
+        return current_command.substr(equalSign+1, firstBlank-1);//no ';'found form "dest=comp"    
+    else                                                     
+        return current_command.substr(equalSign+1, semicolon-1); // form dest=comp;jump
+}                                        
 string Parser::jump(){
-    if(commandType() != C_COMMAND){
+    if(commandType() != C_COMMAND)
         cout << "jump() called on non-C_COMMAND " << endl;
-    }
-    int i = 0;
-    
-    while(current_command[i]!= ';' && i < current_command.size()){
-        i++;
-    }
-    if(current_command[i] == ';')i++;
-    return current_command.substr(i, current_command.size()-1);  
-    
+    if (semicolon < current_command.size())
+        return current_command.substr(semicolon+1, string::npos);
+    else
+        return "";
 }

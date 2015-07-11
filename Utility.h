@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <unordered_map>
 using namespace std;
 
 enum COMMAND_TYPE {A_COMMAND, C_COMMAND, L_COMMAND};

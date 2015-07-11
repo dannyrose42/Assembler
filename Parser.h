@@ -17,17 +17,21 @@ public:
     string getCurrentCommand();
     bool hasMoreCommands();
     void advance();
+    void reset();
     COMMAND_TYPE commandType();
 
     string symbol();
     string dest();
     string comp();
     string jump(); 
+    
+    int semicolon, equalSign, firstBlank;
 
 
 protected:
     fstream fin;
-    string current_command;      
+    string input_file; 
+    string current_command;
 };
 #endif	/* PARSER_H */
 

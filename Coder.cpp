@@ -69,7 +69,7 @@ string Coder::dest(string destMnemonic){
  * D|A      | 0  0  1  0  1  0  1
  * D|M      | 1  0  1  0  1  0  1
  */
-string Coder::comp(string compMnemonic){    
+string Coder::comp(string compMnemonic){  
     if (compMnemonic.compare("0")==0)
         return "0101010";
     else if (compMnemonic.compare("1")==0)
@@ -100,6 +100,8 @@ string Coder::comp(string compMnemonic){
         return "0110111";
     else if (compMnemonic.compare("M+1")==0)
         return "1110111";
+    else if (compMnemonic.compare("D-1")==0)
+        return "0001110";
     else if (compMnemonic.compare("A-1")==0)
         return "0110010";
     else if (compMnemonic.compare("M-1")==0)
@@ -141,7 +143,7 @@ string Coder::comp(string compMnemonic){
  * JLE      | 1  1  0
  * JMP      | 1  1  1
  */
-string Coder::jump(string jumpMnemonic){    
+string Coder::jump(string jumpMnemonic){
     if (jumpMnemonic.compare("null")==0)
         return "000";
     else if (jumpMnemonic.compare("JGT")==0)
@@ -167,7 +169,22 @@ string Coder::dec(string decimal){
     
     string bin16  = "0000000000000000";
     for (int pos = 15; pos >= 0; --pos)
-    {;
+    {
+        if (value % 2) 
+            bin16[pos] = '1';
+        value /= 2;
+    }
+
+    return bin16; 
+}
+//dec overloaded for int from SymbolTable
+string Coder::dec(int decimal){
+
+    int value = decimal; 
+    
+    string bin16  = "0000000000000000";
+    for (int pos = 15; pos >= 0; --pos)
+    {
         if (value % 2) 
             bin16[pos] = '1';
         value /= 2;

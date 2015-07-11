@@ -15,5 +15,6 @@ public:
     string comp(string compMnemonic);
     string jump(string jumpMnemonic);
     string dec(string decimal);
+    string dec(int decimal);
 };      
 #endif	/* CODER_H */
